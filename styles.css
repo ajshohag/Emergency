@@ -1,0 +1,83 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+#auth-section {
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+    background-color: #8b0808;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#auth-section input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #fff8f8;
+}
+
+#auth-section button {
+    width: 100%;
+    padding: 10px;
+    background-color: #0889f1;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+#meds-section {
+    display: none;
+}
+
+#button-bar button {
+    padding: 10px;
+    margin: 10px;
+    background-color: #1e8cbe;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#button-bar button:hover {
+    background-color: #0b62e4;
+}
+
+#search-medicine-btn {
+    font-size: 18px;
+    width: 200px;
+}
+
+#search-bar {
+    margin-top: 20px;
+    padding: 10px;
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid #ffffff;
+}
+
+.medicine-item, .doctor-item, .blood-item, .ambulance-item {
+    padding: 10px;
+    border: 1px solid #ffffff;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+#cart-summary {
+    margin-top: 20px;
+}
+
+#checkout-btn {
+    margin-top: 20px;
+    background-color: #2196F3;
+    padding: 10px 20px;
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 5px;
+}
