@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background: #ffffff;
+        }
+        header {
+            background: #ff0000;
+            color: rgb(255, 255, 255);
+            padding: 10px;
+        }
+        button {
+            background: #0178f7;
+            color: rgb(255, 255, 255);
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        #meds-section {
+            display: none;
+        }
+        .hidden {
+            display: none;
+        }
+        .payment-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgb(30, 230, 203);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgb(0, 0, 0);
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Emergency</h1>
+        <div id="helpline" class="hidden">
+            <h3>Helpline Numbers:</h3>
+            <p>Call: <strong>01717760060</strong> or <strong>01938403521</strong> for assistance.</p>
+        </div>
+    </header>
+
+    <!-- Auth Section -->
+    <div id="auth-section">
+        <h2>Login</h2>
+        <form id="login-form">
+            <label for="email">Email:</label>
+            <input type="email" id="email" placeholder="Enter email" required><br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" placeholder="Enter password" required><br>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <!-- Main App Section -->
+    <div id="meds-section" class="hidden">
+        <div id="button-bar">
+            <button onclick="showSection('medicine-section')">Search Medicine</button>
+            <button onclick="showSection('doctor-section')">Doctor</button>
+            <button onclick="showSection('blood-section')">Blood</button>
+            <button onclick="showSection('ambulance-section')">Ambulance</button>
+            <button onclick="toggleHelpline()">Helpline</button>
+        </div>
+
+        <!-- Sections (Initially Hidden) -->
+        <div id="medicine-section" class="hidden">
+            <input type="text" id="search-bar" placeholder="Type medicine name..." oninput="searchMedicines()">
+            <div id="meds-list"></div>
+        </div>
+        
+        <div id="doctor-section" class="hidden">
+            <div id="doctor-list"></div>
+        </div>
+        
+        <div id="blood-section" class="hidden">
+            <div id="blood-list"></div>
+        </div>
+        
+        <div id="ambulance-section" class="hidden">
+            <div id="ambulance-list"></div>
+        </div>
+
+        <!-- Payment Popup -->
+        <div id="payment-popup" class="payment-container">
+            <h3>Select Payment Method</h3>
+            <button onclick="processPayment()">Bkash</button>
+            <button onclick="processPayment()">Nagad</button>
+            <button onclick="processPayment()">Dhaka Bank</button>
+            <button onclick="processPayment()">Dutch Bangla Bank</button>
+            <br><br>
+            <button onclick="closePaymentPopup()">Cancel</button>
+        </div>
+
+    <script>
+        // Sample Data
+        const medicines = [
+            { name: 'Paracetamol', price: 100 },
+            { name: 'Aspirin', price: 150 },
+            { name: 'Ibuprofen', price: 200 },
+            { name: 'Amoxicillin', price: 250 },
+            { name: 'Cough Syrup', price: 120 }
+        ];
+
+        const doctors = [
+            { name: 'Dr. John Doe', specialty: 'General Medicine', fee: 500 },
+            { name: 'Dr. Jane Smith', specialty: 'Cardiology', fee: 1000 }
+        ];
+
+        const bloodTypes = [
+            { type: 'A+', price: 5000 },
+            { type: 'O+', price: 6000 }
+        ];
+
+        const ambulances = [
+            { name: 'Karim', number: '01704440791' },
+            { name: 'Johir', number: '01726482698' }
+        ];
+
+        let cart = [];
+
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.getElementById('auth-section').style.display = 'none';
+            document.getElementById('meds-section').style.display = 'block';
+        });
+
+        function showSection(sectionId) {
+            const sections = ['medicine-section', 'doctor-section', 'blood-section', 'ambulance-section'];
+            sections.forEach(id => document.getElementById(id).classList.add('hidden'));
+
+            document.getElementById(sectionId).classList.remove('hidden');
+
+            if (sectionId === 'doctor-section') displayDoctors();
+            if (sectionId === 'blood-section') displayBloodTypes();
+            if (sectionId === 'ambulance-section') displayAmbulanceNumbers();
+        }
+
+        function toggleHelpline() {
+            document.getElementById('helpline').classList.toggle('hidden');
+        }
+
+        function searchMedicines() {
+            const query = document.getElementById('search-bar').value.toLowerCase();
+            const filteredMedicines = medicines.filter(medicine =>
+                medicine.name.toLowerCase().includes(query)
+            );
+            displayMedicines(filteredMedicines);
+        }
+
+        function displayMedicines(filteredMedicines) {
+            document.getElementById('meds-list').innerHTML = filteredMedicines.map(m =>
+                `<p><strong>${m.name}</strong> - ৳${m.price} 
+                <button onclick="addToCart('${m.name}', ${m.price})">Add to Cart</button></p>`
+            ).join('');
+        }
+
+        function displayDoctors() {
+            document.getElementById('doctor-list').innerHTML = doctors.map(d =>
+                `<p>${d.name} (${d.specialty}) - Fee: ৳${d.fee} 
+                <button onclick="showPaymentPopup()">Book Appointment</button></p>`
+            ).join('');
+        }
+
+        function displayBloodTypes() {
+            document.getElementById('blood-list').innerHTML = bloodTypes.map(b =>
+                `<p>${b.type} - ৳${b.price} per bag
+                <button onclick="showPaymentPopup()">Buy Now</button></p>`
+            ).join('');
+        }
+
+        function displayAmbulanceNumbers() {
+            document.getElementById('ambulance-list').innerHTML = ambulances.map(a =>
+                `<p>${a.name} - ${a.number} 
+                <button onclick="callNow('${a.number}')">Call Now</button></p>`
+            ).join('');
+        }
+
+        function callNow(number) {
+            window.location.href = `tel:${number}`;
+        }
+
+        function addToCart(name, price) {
+            cart.push({ name, price });
+            showPaymentPopup(); // Now opens payment popup
+        }
+
+        function showPaymentPopup() {
+            document.getElementById('payment-popup').style.display = 'block';
+        }
+
+        function processPayment() {
+            alert('Payment Successful!');
+            cart = [];
+            closePaymentPopup();
+        }
+
+        function closePaymentPopup() {
+            document.getElementById('payment-popup').style.display = 'none';
+        }
+    </script>
+</body>
+  </html>
